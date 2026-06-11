@@ -1,11 +1,11 @@
 ---
 name: cs-exec-briefing
-description: Generate and deliver weekly CS executive briefings from Staircase AI relationship signals, with week-over-week continuity tracking and Slack Canvas delivery. Use this skill whenever the user wants to run, generate, preview, or schedule a CS briefing, executive briefing, leadership digest, or weekly CS update built from customer health/sentiment signals — even if they don't say "briefing" explicitly. Also use it to set up or onboard a new briefing recipient (a CS VP, Director, or exec), and whenever a scheduled task prompt references the cs-exec-briefing skill.
+description: Generate and deliver weekly CS executive briefings from Staircase AI relationship signals, with week-over-week continuity tracking and Slack Canvas delivery. Use this skill whenever the user wants to run, generate, preview, or schedule a CS briefing, executive briefing, leadership digest, or weekly CS update built from customer health/sentiment signals — even if they don't say "briefing" explicitly. Also use it when the user wants to set up or configure their own briefing, and whenever a scheduled task prompt references the cs-exec-briefing skill.
 ---
 
 # CS Executive Briefing
 
-Generate a narrative weekly briefing for a CS leader: thematic patterns across their org, new risks with verbatim customer quotes, continuity on previously flagged accounts, gone-dark early warnings, expansion signals, and pre-written questions for their managers. Data comes from Staircase AI (via MCP); delivery is Slack Canvas + DM. A per-recipient history file provides week-over-week memory.
+Generate a narrative weekly briefing for a CS leader — the current user: thematic patterns across their org, new risks with verbatim customer quotes, continuity on previously flagged accounts, gone-dark early warnings, expansion signals, and pre-written questions for their managers. Data comes from Staircase AI (via MCP); delivery is Slack Canvas + DM. A per-recipient history file provides week-over-week memory. The recipient is always the person using the skill — never ask who the briefing is for.
 
 This skill is org-agnostic. Every org- and recipient-specific value (names, org tree, email formats, support address, delivery preferences) lives in config files in the working folder — never assume or hard-code them.
 
@@ -23,11 +23,11 @@ Schemas for all three are in `references/schemas.md`. The skill's own folder is 
 
 Decide the mode first:
 
-1. **Setup** — the user wants to onboard a new recipient, configure the briefing, or has no config file yet ("set up a briefing for Dana", "get this running for my VP"). Read `references/setup-mode.md` and follow it. Setup is a guided, step-at-a-time walkthrough — assume no prior Cowork expertise.
+1. **Setup** — the user wants to configure their briefing, or has no config file yet ("set up my briefing", "get this running for me"). Read `references/setup-mode.md` and follow it. Setup configures the briefing **for the current user** — do not ask who it's for. It is discovery-first: pull as much as possible from the connected MCPs and ask the user only to confirm or fill gaps. Assume no prior Cowork expertise.
 2. **Run (scheduled)** — the invoking prompt identifies itself as a scheduled run (e.g., "scheduled run" appears in the prompt, or it comes from a scheduled task). Execute the full pipeline below including delivery and history write.
-3. **Run (preview)** — any other generation request ("run the briefing for Dana", "what would Monday's briefing look like?"). Execute the pipeline but **stop before delivery**: render the briefing in chat, write nothing to history, send nothing to Slack. Preview is the default because an ad-hoc mid-week run that writes history would double-count entries in continuity tracking, and delivering would ping the exec twice. If the user explicitly says to deliver ("...and send it"), treat it as scheduled.
+3. **Run (preview)** — any other generation request ("run my briefing", "what would Monday's briefing look like?"). Execute the pipeline but **stop before delivery**: render the briefing in chat, write nothing to history, send nothing to Slack. Preview is the default because an ad-hoc mid-week run that writes history would double-count entries in continuity tracking, and delivering would ping the exec twice. If the user explicitly says to deliver ("...and send it"), treat it as scheduled.
 
-If the recipient named in a run request has no config file, offer setup instead of guessing.
+If a run is requested and no config file exists for the user, offer setup instead of guessing.
 
 ## Run pipeline
 
@@ -55,9 +55,7 @@ The run is unattended, so degrade rather than stop, and never leave the recipien
 
 | File | Read it when |
 |---|---|
-| `references/setup-mode.md` | Running setup / onboarding a recipient |
+| `references/setup-mode.md` | Running setup / configuring the user's briefing |
 | `references/presence-detection.md` | Step 3 — owner attribution and presence classification |
 | `references/briefing-format.md` | Step 4 — drafting; Step 5 — Canvas formatting |
-| `references/schemas.md` | Creating or validating any config/history file |
-| `references/validation-checklist.md` | Reviewing a dry run during setup |
-| `references/troubleshooting.md` | Numeric/duplicate owner IDs, M365 questions, scheduling reliability |
+| `references/schemas.md` | Creating or v
