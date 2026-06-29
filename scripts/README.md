@@ -1,8 +1,8 @@
 # Scripts
 
-Browser console scripts for Gainsight admins. Run these directly in your browser's DevTools console (F12 → Console tab) while logged into your Gainsight tenant.
+Browser console scripts for Gainsight admins. To use one: open the `.md` file, copy the JavaScript code block inside it, and paste it into your browser's DevTools console (F12 → Console tab) while logged into your Gainsight tenant.
 
-Each script requires you to set your tenant subdomain at the top before running. See the comments inside each file for setup instructions.
+Each script requires you to set your tenant subdomain before running. See the setup instructions at the top of each file.
 
 | Script | What it does |
 |---|---|
