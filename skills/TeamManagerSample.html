@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Briefing — Team Manager Briefing</title>
+<style>
+  :root{
+    --bg: #EDF0F4;
+    --panel: #FFFFFF;
+    --ink: #1B2430;
+    --ink-soft: #5B6472;
+    --line: #DADFE6;
+    --navy: #26364A;
+    --navy-deep: #17222F;
+
+    --risk: #B3261E;
+    --risk-bg: #FBEAE9;
+    --risk-line: #E6C1BE;
+
+    --expansion: #1F6F50;
+    --expansion-bg: #E9F3EE;
+    --expansion-line: #BFDDCC;
+
+    --handoff: #9A5B14;
+    --handoff-bg: #FBF0E3;
+    --handoff-line: #E9CDA4;
+
+    --health: #3E4C63;
+    --health-bg: #E8EBF0;
+    --health-line: #C6CCD8;
+
+    --dash: #1B5FA8;
+    --dash-bg: #E9F1FA;
+    --dash-line: #BFD8EF;
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+  }
+
+  .shell{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:250px; flex-shrink:0; background:var(--navy-deep);
+    color:#EDEFF2; padding:32px 22px 22px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8B98A8; display:block; margin-bottom:8px;
+  }
+  .brand h1{ font-family:var(--serif); font-size:24px; font-weight:700; color:#fff; line-height:1.2; }
+  .brand .tag{ font-size:12px; color:#9AA6B4; margin-top:8px; line-height:1.5; }
+
+  .sidebar-nav{ margin-top:28px; }
+  .sidebar-nav .label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:#6E7A88; margin-bottom:10px;
+  }
+  .sidebar-nav ul{ list-style:none; margin:0 0 20px; padding:0; }
+  .sidebar-nav li{
+    font-size:13px; color:#C4CCD6; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.06);
+  }
+
+  .sidebar-foot{
+    margin-top:28px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1);
+    font-size:11px; color:#7C8896; line-height:1.6;
+  }
+
+  .main{ flex:1; padding:44px 52px 80px; max-width:900px; }
+
+  .demo-banner{
+    background:var(--handoff-bg); border:1px solid var(--handoff-line); color:var(--handoff);
+    font-size:13px; font-weight:600; border-radius:8px; padding:10px 16px; margin-bottom:28px;
+  }
+
+  .brief-head h2{ font-family:var(--serif); font-size:24px; color:var(--navy-deep); margin-bottom:4px; }
+  .brief-head .meta{ font-size:13px; color:var(--ink-soft); margin-bottom:24px; }
+
+  .tldr{
+    background:var(--dash-bg); border:1px solid var(--dash-line); border-radius:10px;
+    padding:20px 24px; margin-bottom:24px;
+  }
+  .tldr .tldr-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--dash); margin-bottom:10px; font-weight:700;
+  }
+  .tldr-line{ font-size:14.5px; margin-bottom:8px; }
+  .tldr-line:last-child{ margin-bottom:0; }
+  .tldr-line strong{ color:var(--navy-deep); }
+
+  .scope-note{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:14px 18px; margin-bottom:28px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .scope-note strong{ color:var(--navy-deep); }
+
+  section{ margin-bottom:30px; }
+  .section-head{
+    display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:18px;
+    color:var(--navy-deep); margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid var(--line);
+  }
+
+  .account{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:13px 18px; margin-bottom:9px;
+  }
+  .account .name{ font-weight:700; color:var(--navy-deep); font-size:14px; }
+  .account .meta-line{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+  .account .detail{ font-size:13px; color:var(--ink); margin-top:5px; }
+
+  .badge{
+    display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; border-radius:5px; padding:2px 7px; margin-left:8px;
+  }
+  .badge-risk{ background:var(--risk-bg); color:var(--risk); border:1px solid var(--risk-line); }
+  .badge-conflict{ background:var(--handoff-bg); color:var(--handoff); border:1px solid var(--handoff-line); }
+  .badge-expansion{ background:var(--expansion-bg); color:var(--expansion); border:1px solid var(--expansion-line); }
+
+  table.data-table{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; font-size:13px; }
+  table.data-table th{ background:var(--bg); text-align:left; padding:9px 14px; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.data-table td{ padding:9px 14px; border-bottom:1px solid var(--line); color:var(--ink); }
+  table.data-table tr:last-child td{ border-bottom:none; }
+
+  .load-flag{
+    background:var(--panel); border-left:4px solid var(--handoff); border-radius:0 8px 8px 0;
+    padding:11px 18px; margin-bottom:8px; font-size:13px;
+  }
+  .load-flag strong{ color:var(--navy-deep); }
+
+  .email-list{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 20px; }
+  .email-list .note{ font-size:12px; color:var(--ink-soft); font-style:italic; margin-bottom:12px; }
+  .email-row{ padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .email-row:last-child{ border-bottom:none; }
+  .email-row a{ color:var(--dash); font-weight:700; text-decoration:none; }
+  .email-row a:hover{ text-decoration:underline; }
+  .email-row .desc{ color:var(--ink-soft); }
+
+  .footer-note{
+    margin-top:36px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--ink-soft); text-align:center;
+  }
+
+  @media (max-width: 860px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:relative; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <span class="eyebrow">CS Operations · Sample Output</span>
+      <h1>Team Manager Briefing</h1>
+      <div class="tag">This is what your weekly briefing actually looks like — real output, real accounts, real format.</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="label">In This Sample</div>
+      <ul>
+        <li>TL;DR</li>
+        <li>What's Happening</li>
+        <li>Signal Conflicts</li>
+        <li>New Risks</li>
+        <li>Gone Dark</li>
+        <li>Expansion Signals</li>
+        <li>Team Load Flags</li>
+        <li>Pre-Written Emails</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-foot">
+      This delivers to your Slack every week at the time you choose during setup.<br><br>
+      Questions? Contact your CS Operations / admin team.
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="demo-banner">📋 SAMPLE OUTPUT — this shows the real structure and format of a weekly Team Manager Briefing, with fictional companies and names standing in for real team/customer data, so you know what to expect before your first delivery.</div>
+
+    <div class="brief-head">
+      <h2>My Team Briefing — Week of July 27, 2026</h2>
+      <div class="meta">Delivered to Slack · 8:00 AM MT</div>
+    </div>
+
+    <div class="tldr">
+      <div class="tldr-label">⚡ 3 Things You Need to Know This Week</div>
+      <div class="tldr-line">🔴 <strong>Top Risk:</strong> Meridian Insurance Group — $4.72M ARR, owned by Sam Rivera. Health score and sentiment have both fallen to 0, renewal is ~2 months out, and there is currently zero open CTA of any type on this account. The single biggest exposure on the team this week.</div>
+      <div class="tldr-line">🔴 <strong>Churn Risk Flag:</strong> Castellan Financial Group — $1.9M ARR, owned by Jordan Patel. Active churn risk flag, sentiment has dropped to 9, Gainsight shows this account Green (a false-positive), and the one open CTA is a routine business-review task — not a Risk-type CTA.</div>
+      <div class="tldr-line">✅ <strong>Only 2 accounts</strong> qualify as truly "gone dark" (90+ days no engagement AND renewal within 180 days) across the entire 2,116-account team — both small ARR. See Gone Dark below.</div>
+    </div>
+
+    <div class="scope-note">
+      <strong>Scope note:</strong> This team carries 2,116 accounts across 8 CSMs — well above the threshold for account-by-account listing, so this briefing surfaces the highest-priority signals rather than an exhaustive list. Risk-type CTA status is individually verified for every named account above and below; CSM-level summary tables use Gainsight's synced totals. Want a specific person's full list? Just open Cowork and ask — see the "Asking for More" section in your setup guide.
+    </div>
+
+    <section>
+      <div class="section-head">⚡ New Signal Conflicts</div>
+      <div class="account">
+        <div class="name">Castellan Financial Group <span class="badge badge-conflict">False Green</span></div>
+        <div class="meta-line">Jordan Patel · $1,895,451 ARR · Renewal 2027-02-02</div>
+        <div class="detail">Staircase sentiment 9 (Risk Level 5) — but Gainsight shows this account Green. Only open CTA is Activity-type, not Risk. Active Churn Risk flag.</div>
+      </div>
+      <div class="account">
+        <div class="name">Meridian Insurance Group <span class="badge badge-risk">Unworked Risk</span></div>
+        <div class="meta-line">Sam Rivera · $4,722,666 ARR · Renewal 2026-09-30</div>
+        <div class="detail">Sentiment and health both at 0. Zero open CTAs of any kind — nothing is currently tracking this risk.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🔴 New Risks — At-Risk Volume by CSM</div>
+      <table class="data-table">
+        <tr><th>CSM</th><th>At-Risk Accounts</th><th>At-Risk ARR</th></tr>
+        <tr><td>Taylor Kim</td><td>39</td><td>$9.70M</td></tr>
+        <tr><td>Robin Chase</td><td>29</td><td>$9.10M</td></tr>
+        <tr><td>Morgan Ellis</td><td>28</td><td>$10.02M</td></tr>
+        <tr><td>Sam Rivera</td><td>27</td><td>$14.58M</td></tr>
+        <tr><td>Casey Brooks</td><td>24</td><td>$4.75M</td></tr>
+        <tr><td>Jordan Patel</td><td>23</td><td>$7.88M</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-head">🌑 Gone Dark</div>
+      <div class="account">
+        <div class="name">Ashworth Trust Company</div>
+        <div class="meta-line">Drew Sinclair · $41,496 ARR · Dark 337 days · Renewal 2026-10-31</div>
+        <div class="detail">Flagged in a prior briefing cycle — re-verified this run, still unresolved.</div>
+      </div>
+      <div class="account">
+        <div class="name">Statewide Licensing Board</div>
+        <div class="meta-line">Jamie Whitfield · $41,707 ARR · Dark 529 days · Renewal 2026-12-01</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🌱 Expansion Signals (Readiness 5 only)</div>
+      <div class="account">
+        <div class="name">Northfield Partners <span class="badge badge-expansion">Readiness 5</span></div>
+        <div class="meta-line">Sam Rivera · $2,000,160 ARR</div>
+      </div>
+      <div class="account">
+        <div class="name">Whitmore &amp; Associates <span class="badge badge-expansion">Readiness 5</span></div>
+        <div class="meta-line">Morgan Ellis · $908,554 ARR</div>
+      </div>
+      <div class="account">
+        <div class="name">Ridgeline Legal Group <span class="badge badge-expansion">Readiness 5</span></div>
+        <div class="meta-line">Sam Rivera · $894,600 ARR</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">👤 Team Load Flags</div>
+      <div class="load-flag"><strong>Sam Rivera</strong> — 27 at-risk / $14.6M ARR at risk, highest dollar exposure on the team, driven by Meridian Insurance Group.</div>
+      <div class="load-flag"><strong>Taylor Kim</strong> — 39 at-risk accounts, highest account count on the team.</div>
+      <div class="load-flag"><strong>Jordan Patel</strong> — 23 at-risk, including the Castellan Financial Group churn risk flag.</div>
+    </section>
+
+    <section>
+      <div class="section-head">📧 Pre-Written Emails</div>
+      <div class="email-list">
+        <div class="note">Click a team member's name to open a pre-written email ready to send.</div>
+        <div class="email-row"><a href="#">Sam Rivera</a> — <span class="desc">Meridian Insurance Group plus two other softening accounts.</span></div>
+        <div class="email-row"><a href="#">Taylor Kim</a> — <span class="desc">Two accounts trending soft, renewals within 30 days.</span></div>
+        <div class="email-row"><a href="#">Morgan Ellis</a> — <span class="desc">Health/sentiment mismatch ahead of renewal.</span></div>
+        <div class="email-row"><a href="#">Jordan Patel</a> — <span class="desc">Castellan Financial Group churn risk flag, no active plan.</span></div>
+        <div class="email-row"><a href="#">Robin Chase</a> — <span class="desc">Expansion opportunity plus at-risk load.</span></div>
+        <div class="email-row"><a href="#">Casey Brooks</a> — <span class="desc">Two longest-dark accounts on his book.</span></div>
+        <div class="email-row"><a href="#">Reese Alvarado</a> — <span class="desc">At-risk load check-in.</span></div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      This sample uses fictional companies and names, but reflects the real structure and logic of a live Team Manager Briefing — generated by Claude + Staircase AI + Gainsight CS. Your first live briefing will look exactly like this, scoped to your own real team.
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Briefing — Executive Briefing</title>
+<style>
+  :root{
+    --bg: #EDF0F4;
+    --panel: #FFFFFF;
+    --ink: #1B2430;
+    --ink-soft: #5B6472;
+    --line: #DADFE6;
+    --navy: #26364A;
+    --navy-deep: #17222F;
+
+    --risk: #B3261E;
+    --risk-bg: #FBEAE9;
+    --risk-line: #E6C1BE;
+
+    --expansion: #1F6F50;
+    --expansion-bg: #E9F3EE;
+    --expansion-line: #BFDDCC;
+
+    --handoff: #9A5B14;
+    --handoff-bg: #FBF0E3;
+    --handoff-line: #E9CDA4;
+
+    --health: #3E4C63;
+    --health-bg: #E8EBF0;
+    --health-line: #C6CCD8;
+
+    --dash: #1B5FA8;
+    --dash-bg: #E9F1FA;
+    --dash-line: #BFD8EF;
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+  }
+
+  .shell{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:250px; flex-shrink:0; background:var(--navy-deep);
+    color:#EDEFF2; padding:32px 22px 22px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8B98A8; display:block; margin-bottom:8px;
+  }
+  .brand h1{ font-family:var(--serif); font-size:24px; font-weight:700; color:#fff; line-height:1.2; }
+  .brand .tag{ font-size:12px; color:#9AA6B4; margin-top:8px; line-height:1.5; }
+
+  .sidebar-nav{ margin-top:28px; }
+  .sidebar-nav .label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:#6E7A88; margin-bottom:10px;
+  }
+  .sidebar-nav ul{ list-style:none; margin:0 0 20px; padding:0; }
+  .sidebar-nav li{
+    font-size:13px; color:#C4CCD6; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.06);
+  }
+
+  .sidebar-foot{
+    margin-top:28px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1);
+    font-size:11px; color:#7C8896; line-height:1.6;
+  }
+
+  .main{ flex:1; padding:44px 52px 80px; max-width:900px; }
+
+  .demo-banner{
+    background:var(--handoff-bg); border:1px solid var(--handoff-line); color:var(--handoff);
+    font-size:13px; font-weight:600; border-radius:8px; padding:10px 16px; margin-bottom:28px;
+  }
+
+  .brief-head h2{ font-family:var(--serif); font-size:24px; color:var(--navy-deep); margin-bottom:4px; }
+  .brief-head .meta{ font-size:13px; color:var(--ink-soft); margin-bottom:24px; }
+
+  .tldr{
+    background:var(--dash-bg); border:1px solid var(--dash-line); border-radius:10px;
+    padding:20px 24px; margin-bottom:24px;
+  }
+  .tldr .tldr-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--dash); margin-bottom:10px; font-weight:700;
+  }
+  .tldr-line{ font-size:14.5px; margin-bottom:8px; }
+  .tldr-line:last-child{ margin-bottom:0; }
+  .tldr-line strong{ color:var(--navy-deep); }
+
+  .scope-note{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:14px 18px; margin-bottom:28px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .scope-note strong{ color:var(--navy-deep); }
+
+  section{ margin-bottom:30px; }
+  .section-head{
+    display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:18px;
+    color:var(--navy-deep); margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid var(--line);
+  }
+
+  .account{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:13px 18px; margin-bottom:9px;
+  }
+  .account .name{ font-weight:700; color:var(--navy-deep); font-size:14px; }
+  .account .meta-line{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+  .account .detail{ font-size:13px; color:var(--ink); margin-top:5px; }
+
+  .badge{
+    display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; border-radius:5px; padding:2px 7px; margin-left:8px;
+  }
+  .badge-risk{ background:var(--risk-bg); color:var(--risk); border:1px solid var(--risk-line); }
+  .badge-conflict{ background:var(--handoff-bg); color:var(--handoff); border:1px solid var(--handoff-line); }
+  .badge-expansion{ background:var(--expansion-bg); color:var(--expansion); border:1px solid var(--expansion-line); }
+
+  table.data-table{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; font-size:13px; }
+  table.data-table th{ background:var(--bg); text-align:left; padding:9px 14px; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.data-table td{ padding:9px 14px; border-bottom:1px solid var(--line); color:var(--ink); }
+  table.data-table tr:last-child td{ border-bottom:none; }
+
+  .load-flag{
+    background:var(--panel); border-left:4px solid var(--handoff); border-radius:0 8px 8px 0;
+    padding:11px 18px; margin-bottom:8px; font-size:13px;
+  }
+  .load-flag strong{ color:var(--navy-deep); }
+
+  .email-list{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 20px; }
+  .email-list .note{ font-size:12px; color:var(--ink-soft); font-style:italic; margin-bottom:12px; }
+  .email-row{ padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .email-row:last-child{ border-bottom:none; }
+  .email-row a{ color:var(--dash); font-weight:700; text-decoration:none; }
+  .email-row a:hover{ text-decoration:underline; }
+  .email-row .desc{ color:var(--ink-soft); }
+
+  .footer-note{
+    margin-top:36px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--ink-soft); text-align:center;
+  }
+
+  @media (max-width: 860px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:relative; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <span class="eyebrow">CS Operations · Sample Output</span>
+      <h1>Executive Briefing</h1>
+      <div class="tag">This is what your weekly briefing actually looks like — real output, real accounts, real format.</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="label">In This Sample</div>
+      <ul>
+        <li>TL;DR</li>
+        <li>What's Happening</li>
+        <li>Signal Conflicts</li>
+        <li>New Risks</li>
+        <li>Gone Dark</li>
+        <li>Expansion Signals</li>
+        <li>CSM Load Flags</li>
+        <li>Questions to Ask</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-foot">
+      This delivers to your Slack every week at the time you choose during setup.<br><br>
+      Questions? Contact your CS Operations / admin team.
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="demo-banner">📋 SAMPLE OUTPUT — this shows the real structure and format of a weekly Executive Briefing, with fictional companies and names standing in for real org/customer data, so you know what to expect before your first delivery.</div>
+
+    <div class="brief-head">
+      <h2>CS Executive Briefing — Week of July 27, 2026</h2>
+      <div class="meta">Delivered to Slack · 8:00 AM MT</div>
+    </div>
+
+    <div class="tldr">
+      <div class="tldr-label">⚡ 3 Things You Need to Know This Week</div>
+      <div class="tldr-line">🔴 <strong>Top risk priority:</strong> Ashworth Trust Company (Taylor Kim, Sam Rivera's pod) — $195,090 ARR, zero logged engagement since December 15 (217 days dark), renews in 7 days. This is the only dark-renewal-within-7-days account this week and it has no close plan on file.</div>
+      <div class="tldr-line">🔴 <strong>Second priority:</strong> Meridian Insurance Group (Jordan Patel, Direct IC) — $57,360 ARR, Gainsight health cratered from 83 → 32 in the last two weeks, Risk Level 5, sentiment 24, renews in 12 days, zero open Risk CTAs. Two more Direct IC accounts share the same renewal date with the same unworked-risk profile — this looks like a cluster, not a coincidence.</div>
+      <div class="tldr-line">✅ <strong>Pattern worth watching:</strong> Sam Rivera's pod continues to carry the heaviest concentration of risk in the org — two of his CSMs are each tracking 7-8 flagged accounts this cycle.</div>
+    </div>
+
+    <div class="scope-note">
+      <strong>Scope note:</strong> This briefing aggregates signals across the full org — multiple pods, several hundred accounts — into themes, top risks, and pod-manager-level questions rather than an exhaustive per-account list. Want the full detail behind any theme? Just ask directly in Cowork.
+    </div>
+
+    <section>
+      <div class="section-head">📊 What's Happening Across the Segment</div>
+      <div class="account">
+        <div class="detail">Gainsight health scores are diverging in both directions this week — some catching up to reality, some getting further from it. One long-stale account finally corrected after 4 consecutive weeks flagged — a rare instance of the sync gap closing. But two other accounts show the opposite: healthy-looking Gainsight scores sitting on top of Risk Level 5 signals with zero open Risk CTAs.</div>
+      </div>
+      <div class="account">
+        <div class="detail">A cluster of five Direct-IC accounts all renew on the same date and all carry active risk signals with no CTA coverage. Worth checking whether this is a batch-loaded contract cohort that's been under-resourced as a group.</div>
+      </div>
+      <div class="account">
+        <div class="detail">Risk concentration remains heaviest in Sam Rivera's pod — two of his CSMs are each carrying 3-4 flagged accounts this cycle, consistent with the pattern of the last several weeks.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">⚡ New Signal Conflicts This Week</div>
+      <div class="account">
+        <div class="name">Northfield Partners <span class="badge badge-conflict">Unworked Risk (High Risk)</span></div>
+        <div class="meta-line">Morgan Ellis · $117,270 ARR</div>
+        <div class="detail">Risk 5, sentiment 38, zero open Risk CTAs.</div>
+      </div>
+      <div class="account">
+        <div class="name">Whitmore &amp; Associates <span class="badge badge-conflict">False Green</span></div>
+        <div class="meta-line">Reese Alvarado · $49,555 ARR · Renews in 12 days</div>
+        <div class="detail">Gainsight shows Green (94); Staircase shows Risk 5, sentiment 28.</div>
+      </div>
+      <div class="account">
+        <div class="name">Meridian Insurance Group <span class="badge badge-conflict">Unworked Risk (High Risk)</span></div>
+        <div class="meta-line">Jordan Patel · $57,360 ARR · Renews in 12 days</div>
+        <div class="detail">Health fell from Gainsight Green (83) to Red (32) in two weeks. See TL;DR.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🔴 New Risks This Week</div>
+      <div class="account">
+        <div class="name">Castellan Financial Group</div>
+        <div class="meta-line">Robin Chase · $287,000 ARR</div>
+        <div class="detail">Risk 5, sentiment 33. Continuing into its 2nd week as an unworked high-risk account; Gainsight health improved to 80 (Yellow) but no CTA is open.</div>
+      </div>
+      <div class="account">
+        <div class="name">Ridgeline Legal Group</div>
+        <div class="meta-line">Jordan Patel · $244,800 ARR</div>
+        <div class="detail">Risk 5, sentiment 14. Newly surfaced this week; not yet cross-referenced against Gainsight — flagged for next cycle's priority set.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🌑 Accounts Gone Dark</div>
+      <div class="account">
+        <div class="name">Ashworth Trust Company <span class="badge badge-risk">Top Priority</span></div>
+        <div class="meta-line">Taylor Kim (Sam Rivera's pod) · $195,090 ARR · No engagement since Dec 15 · Renews in 7 days</div>
+      </div>
+      <div class="account">
+        <div class="name">Statewide Licensing Board</div>
+        <div class="meta-line">Jordan Patel (Direct IC) · $27,743 ARR · No engagement since Nov 15, prior year · Renews in 12 days</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🌱 Expansion Signals</div>
+      <div class="account">
+        <div class="name">Meridian Insurance Group <span class="badge badge-expansion">Readiness 5</span></div>
+        <div class="meta-line">Sam Rivera · $4,722,666 ARR</div>
+        <div class="detail">Also flagged at risk — resolve retention first.</div>
+      </div>
+      <div class="account">
+        <div class="name">Northfield Partners <span class="badge badge-expansion">Readiness 4</span></div>
+        <div class="meta-line">Sam Rivera · $2,098,032 ARR</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">👤 CSM Load Flags</div>
+      <div class="load-flag"><strong>Morgan Ellis</strong> (Sam Rivera's pod) — 4 qualifying accounts this cycle.</div>
+      <div class="load-flag"><strong>Robin Chase</strong> (Sam Rivera's pod) — 3 qualifying accounts, including the top-ARR at-risk account this week.</div>
+      <div class="load-flag"><strong>Taylor Kim</strong> (Sam Rivera's pod) — 3 qualifying accounts, including the Top Priority dark account.</div>
+      <div class="load-flag"><strong>Jordan Patel</strong> (Direct IC) — 3 qualifying accounts: Meridian Insurance Group, Statewide Licensing Board, Ridgeline Legal Group.</div>
+    </section>
+
+    <section>
+      <div class="section-head">✅ Questions to Ask This Week</div>
+      <div class="email-list">
+        <div class="note">Click a pod manager's name to open a pre-written email ready to send.</div>
+        <div class="email-row"><a href="#">Sam Rivera</a> — <span class="desc">Northfield Partners pattern, Ashworth Trust Company top priority, churn-processing gap.</span></div>
+        <div class="email-row"><a href="#">Casey Brooks</a> — <span class="desc">Whitmore &amp; Associates false-green conflict, Statewide Licensing Board dark renewal.</span></div>
+        <div class="email-row"><a href="#">Jordan Patel</a> — <span class="desc">Meridian Insurance Group (2nd top priority), Ridgeline Legal Group, Statewide Licensing Board.</span></div>
+      </div>
+    </section>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      This sample uses fictional companies and names, but reflects the real structure and logic of a live Executive Briefing — generated by Claude + Staircase AI + Gainsight CS. Your first live briefing will look exactly like this, scoped to your own real org.
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

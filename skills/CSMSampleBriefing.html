@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Briefing — CS Weekly Briefing</title>
+<style>
+  :root{
+    --bg: #EDF0F4;
+    --panel: #FFFFFF;
+    --ink: #1B2430;
+    --ink-soft: #5B6472;
+    --line: #DADFE6;
+    --navy: #26364A;
+    --navy-deep: #17222F;
+
+    --risk: #B3261E;
+    --risk-bg: #FBEAE9;
+    --risk-line: #E6C1BE;
+
+    --expansion: #1F6F50;
+    --expansion-bg: #E9F3EE;
+    --expansion-line: #BFDDCC;
+
+    --handoff: #9A5B14;
+    --handoff-bg: #FBF0E3;
+    --handoff-line: #E9CDA4;
+
+    --health: #3E4C63;
+    --health-bg: #E8EBF0;
+    --health-line: #C6CCD8;
+
+    --dash: #1B5FA8;
+    --dash-bg: #E9F1FA;
+    --dash-line: #BFD8EF;
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+  }
+
+  .shell{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:250px; flex-shrink:0; background:var(--navy-deep);
+    color:#EDEFF2; padding:32px 22px 22px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8B98A8; display:block; margin-bottom:8px;
+  }
+  .brand h1{ font-family:var(--serif); font-size:24px; font-weight:700; color:#fff; line-height:1.2; }
+  .brand .tag{ font-size:12px; color:#9AA6B4; margin-top:8px; line-height:1.5; }
+
+  .sidebar-nav{ margin-top:28px; }
+  .sidebar-nav .label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:#6E7A88; margin-bottom:10px;
+  }
+  .sidebar-nav ul{ list-style:none; margin:0 0 20px; padding:0; }
+  .sidebar-nav li{
+    font-size:13px; color:#C4CCD6; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.06);
+  }
+
+  .sidebar-foot{
+    margin-top:28px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1);
+    font-size:11px; color:#7C8896; line-height:1.6;
+  }
+
+  .main{ flex:1; padding:44px 52px 80px; max-width:900px; }
+
+  .demo-banner{
+    background:var(--handoff-bg); border:1px solid var(--handoff-line); color:var(--handoff);
+    font-size:13px; font-weight:600; border-radius:8px; padding:10px 16px; margin-bottom:28px;
+  }
+
+  .brief-head h2{ font-family:var(--serif); font-size:24px; color:var(--navy-deep); margin-bottom:4px; }
+  .brief-head .meta{ font-size:13px; color:var(--ink-soft); margin-bottom:24px; }
+
+  .tldr{
+    background:var(--dash-bg); border:1px solid var(--dash-line); border-radius:10px;
+    padding:20px 24px; margin-bottom:24px;
+  }
+  .tldr .tldr-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--dash); margin-bottom:10px; font-weight:700;
+  }
+  .tldr-line{ font-size:14.5px; margin-bottom:8px; }
+  .tldr-line:last-child{ margin-bottom:0; }
+  .tldr-line strong{ color:var(--navy-deep); }
+
+  .scope-note{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:14px 18px; margin-bottom:28px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .scope-note strong{ color:var(--navy-deep); }
+
+  section{ margin-bottom:30px; }
+  .section-head{
+    display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:18px;
+    color:var(--navy-deep); margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid var(--line);
+  }
+
+  .account{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:13px 18px; margin-bottom:9px;
+  }
+  .account .name{ font-weight:700; color:var(--navy-deep); font-size:14px; }
+  .account .meta-line{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+  .account .detail{ font-size:13px; color:var(--ink); margin-top:5px; }
+
+  .badge{
+    display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; border-radius:5px; padding:2px 7px; margin-left:8px;
+  }
+  .badge-risk{ background:var(--risk-bg); color:var(--risk); border:1px solid var(--risk-line); }
+  .badge-conflict{ background:var(--handoff-bg); color:var(--handoff); border:1px solid var(--handoff-line); }
+  .badge-expansion{ background:var(--expansion-bg); color:var(--expansion); border:1px solid var(--expansion-line); }
+  .badge-churn{ background:#F1E4E3; color:#7A2E27; border:1px solid #DBB5B0; }
+
+  .email-list{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 20px; }
+  .email-list .note{ font-size:12px; color:var(--ink-soft); font-style:italic; margin-bottom:12px; }
+  .email-row{ padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .email-row:last-child{ border-bottom:none; }
+  .email-row a{ color:var(--dash); font-weight:700; text-decoration:none; }
+  .email-row a:hover{ text-decoration:underline; }
+  .email-row .desc{ color:var(--ink-soft); }
+
+  .footer-note{
+    margin-top:36px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--ink-soft); text-align:center;
+  }
+
+  @media (max-width: 860px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:relative; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <span class="eyebrow">CS Operations · Sample Output</span>
+      <h1>CS Weekly Briefing</h1>
+      <div class="tag">This is what your weekly briefing actually looks like — real output, real accounts, real format.</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="label">In This Sample</div>
+      <ul>
+        <li>TL;DR</li>
+        <li>What's Happening</li>
+        <li>Signal Conflicts</li>
+        <li>New Risks</li>
+        <li>Gone Dark</li>
+        <li>Expansion Signals</li>
+        <li>Draft Customer Outreach</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-foot">
+      This delivers to your Slack every week at the time you choose during setup.<br><br>
+      Questions? Contact your CS Operations / admin team.
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="demo-banner">📋 SAMPLE OUTPUT — this shows the real structure and format of a weekly briefing, with fictional company names standing in for real customer data, so you know what to expect before your first delivery.</div>
+
+    <div class="brief-head">
+      <h2>CS Briefing — Week of July 27, 2026</h2>
+      <div class="meta">Delivered to Slack · 7:00 AM MT</div>
+    </div>
+
+    <div class="tldr">
+      <div class="tldr-label">⚡ 3 Things You Need to Know This Week</div>
+      <div class="tldr-line">🔴 <strong>Top Risk:</strong> Harrow &amp; Vance LLP ($28.3K ARR) has confirmed non-renewal, gone dark for 64 days, and the repository deactivates in 3 days.</div>
+      <div class="tldr-line">🌱 <strong>Top Opportunity:</strong> Northfield Partners ($131.6K ARR) is sitting at expansion readiness level 4 with no upsell conversation open yet.</div>
+      <div class="tldr-line">✅ <strong>Action This Week:</strong> Reach Delacroix Manufacturing ($31.6K ARR) before its non-renewal finalizes — unresolved platform-stability complaints there are worth understanding before they show up elsewhere in the book.</div>
+    </div>
+
+    <div class="scope-note">
+      <strong>Scope note:</strong> Gainsight health/CTA data was cross-referenced for all at-risk accounts this week; gone-dark accounts below use Staircase-only data due to volume. Want the full cross-reference? Just open Cowork and ask — see the "Asking for More" section in your setup guide.
+    </div>
+
+    <section>
+      <div class="section-head">⚡ New Signal Conflicts This Week</div>
+      <div class="account">
+        <div class="name">Kessler Family Law <span class="badge badge-conflict">False Green</span></div>
+        <div class="meta-line">$22.5K ARR · Renewal 2027-03-03</div>
+        <div class="detail">Gainsight shows Green (health 82) while Staircase sentiment sits at 15. Repeated outages and a live iManage migration conversation aren't reflected in the health score.</div>
+      </div>
+      <div class="account">
+        <div class="name">Meridian Insurance Group <span class="badge badge-conflict">False Green</span></div>
+        <div class="meta-line">$71.2K ARR · Renewal 2026-09-30</div>
+        <div class="detail">Green health (100) against sentiment of 29, no open Risk CTA.</div>
+      </div>
+      <div class="account">
+        <div class="name">Bellweather Consulting <span class="badge badge-conflict">False Green</span></div>
+        <div class="meta-line">$70.3K ARR · Renewal 2026-10-31</div>
+        <div class="detail">Green health (88) against sentiment of 24, no open Risk CTA.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🔴 New Risks This Week</div>
+      <div class="account">
+        <div class="name">Harrow &amp; Vance LLP <span class="badge badge-churn">Confirmed Non-Renewal</span></div>
+        <div class="meta-line">$28.3K ARR · Renewal 2026-08-02</div>
+        <div class="detail">Customer has formally confirmed non-renewal and gone dark for 64 days; repository deactivates in 3 days, no open Risk CTA on file.</div>
+      </div>
+      <div class="account">
+        <div class="name">Castellan Financial Group <span class="badge badge-risk">Unworked Risk</span></div>
+        <div class="meta-line">$111.7K ARR · Renewal 2028-06-24</div>
+        <div class="detail">Sentiment 35 with no open Risk CTA — the largest at-risk account in the book.</div>
+      </div>
+      <div class="account">
+        <div class="name">Ridgeline Legal Group <span class="badge badge-risk">Unworked Risk</span></div>
+        <div class="meta-line">$80.1K ARR · Renewal 2026-09-30</div>
+        <div class="detail">Sentiment 13, the lowest in the book, with no open Risk CTA.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🌑 Accounts Gone Dark</div>
+      <div class="account">
+        <div class="name">Ashworth Trust Company</div>
+        <div class="meta-line">$74.4K ARR · Last engagement 2026-05-19 · Renewal 2026-08-02</div>
+      </div>
+      <div class="account">
+        <div class="name">Statewide Licensing Board</div>
+        <div class="meta-line">$31.1K ARR · Last engagement 2026-04-11 · Renewal 2026-09-01</div>
+      </div>
+      <div class="account">
+        <div class="name">Coastal University System – General Counsel</div>
+        <div class="meta-line">$69.0K ARR · Last engagement 2025-12-16 · Renewal 2026-11-01</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">🌱 Expansion Signals</div>
+      <div class="account">
+        <div class="name">Northfield Partners <span class="badge badge-expansion">Readiness 4</span></div>
+        <div class="meta-line">$131.6K ARR · No upsell conversation open yet — largest unactioned opportunity in the book.</div>
+      </div>
+      <div class="account">
+        <div class="name">Whitmore &amp; Associates <span class="badge badge-expansion">Readiness 4</span></div>
+        <div class="meta-line">$131.5K ARR · No upsell conversation open yet.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">📧 Draft Customer Outreach</div>
+      <div class="email-list">
+        <div class="note">Click an account name to open a draft email ready to send — review and personalize before hitting send.</div>
+        <div class="email-row"><a href="#">Kessler Family Law</a> — <span class="desc">repeated outages and a live iManage migration conversation; needs a direct, warm outreach.</span></div>
+        <div class="email-row"><a href="#">Meridian Insurance Group</a> — <span class="desc">renewal in ~60 days; sentiment well below what the health score shows.</span></div>
+        <div class="email-row"><a href="#">Bellweather Consulting</a> — <span class="desc">renewal ~90 days out; sentiment well below the health score.</span></div>
+        <div class="email-row"><a href="#">Harrow &amp; Vance LLP</a> — <span class="desc">already confirmed non-renewal; review before sending — this should focus on a clean offboarding, not retention.</span></div>
+        <div class="email-row"><a href="#">Castellan Financial Group</a> — <span class="desc">largest at-risk account in the book, sentiment 35, no open Risk CTA.</span></div>
+        <div class="email-row"><a href="#">Ridgeline Legal Group</a> — <span class="desc">lowest sentiment score in the book, no open Risk CTA.</span></div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      This sample uses fictional company names, but reflects the real structure and logic of a live briefing — generated by Claude + Staircase AI + Gainsight CS. Your first live briefing will look exactly like this, scoped to your own real book.
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

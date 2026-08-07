@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Weekly Briefing — Setup Guide</title>
+<style>
+  :root{
+    --bg: #EDF0F4;
+    --panel: #FFFFFF;
+    --ink: #1B2430;
+    --ink-soft: #5B6472;
+    --line: #DADFE6;
+    --navy: #26364A;
+    --navy-deep: #17222F;
+
+    --risk: #B3261E;
+    --risk-bg: #FBEAE9;
+    --risk-line: #E6C1BE;
+
+    --expansion: #1F6F50;
+    --expansion-bg: #E9F3EE;
+    --expansion-line: #BFDDCC;
+
+    --handoff: #9A5B14;
+    --handoff-bg: #FBF0E3;
+    --handoff-line: #E9CDA4;
+
+    --health: #3E4C63;
+    --health-bg: #E8EBF0;
+    --health-line: #C6CCD8;
+
+    --dash: #1B5FA8;
+    --dash-bg: #E9F1FA;
+    --dash-line: #BFD8EF;
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+  }
+
+  .shell{ display:flex; min-height:100vh; }
+
+  .sidebar{
+    width:270px; flex-shrink:0; background:var(--navy-deep);
+    color:#EDEFF2; padding:32px 22px 22px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand{ margin-bottom:28px; }
+  .brand .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#8B98A8; display:block; margin-bottom:8px;
+  }
+  .brand h1{
+    font-family:var(--serif); font-size:26px; font-weight:700; color:#fff; line-height:1.2;
+  }
+  .brand .tag{
+    font-size:12.5px; color:#9AA6B4; margin-top:8px; line-height:1.5;
+  }
+
+  .navlist{ list-style:none; margin:0; padding:0; }
+  .navlist li{ margin-bottom:2px; }
+  .navlist a{
+    display:block; color:#C4CCD6; text-decoration:none; font-size:13.5px;
+    padding:8px 10px; border-radius:6px; transition:background .15s, color .15s;
+  }
+  .navlist a:hover{ background:rgba(255,255,255,.06); color:#fff; }
+  .navlist .navnum{
+    font-family:var(--mono); font-size:11px; color:#6E7A88; margin-right:8px;
+  }
+
+  .sidebar-foot{
+    margin-top:32px; padding-top:18px; border-top:1px solid rgba(255,255,255,.1);
+    font-size:11.5px; color:#7C8896; line-height:1.6;
+  }
+
+  .main{ flex:1; padding:48px 56px 80px; max-width:840px; }
+
+  .pagehead{ border-bottom:3px solid var(--navy); padding-bottom:22px; margin-bottom:36px; }
+  .pagehead h2{ font-family:var(--serif); font-size:28px; color:var(--navy-deep); }
+  .pagehead .sub{ font-size:14px; color:var(--ink-soft); margin-top:6px; }
+
+  .intro-box{
+    background:var(--dash-bg); border-left:4px solid var(--dash);
+    border-radius:0 8px 8px 0; padding:16px 20px; margin-bottom:40px;
+    font-size:14px; color:#1c3a5e;
+  }
+  .intro-box strong{ color:var(--dash); }
+
+  section{ margin-bottom:44px; scroll-margin-top:24px; }
+
+  .section-label{
+    font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .section-label .navnum{ color:var(--navy); margin-right:6px; }
+  h3.step-title{
+    font-family:var(--serif); font-size:20px; color:var(--navy-deep); margin-bottom:14px;
+  }
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:20px 24px; margin-bottom:14px;
+  }
+
+  .badge{
+    display:inline-block; font-size:10px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; border-radius:5px; padding:3px 9px; margin-bottom:10px;
+  }
+  .badge-health{ background:var(--health-bg); color:var(--health); border:1px solid var(--health-line); }
+  .badge-expansion{ background:var(--expansion-bg); color:var(--expansion); border:1px solid var(--expansion-line); }
+  .badge-handoff{ background:var(--handoff-bg); color:var(--handoff); border:1px solid var(--handoff-line); }
+  .badge-risk{ background:var(--risk-bg); color:var(--risk); border:1px solid var(--risk-line); }
+  .badge-dash{ background:var(--dash-bg); color:var(--dash); border:1px solid var(--dash-line); }
+
+  ol.steps{ margin:0; padding-left:22px; }
+  ol.steps li{ margin-bottom:10px; font-size:14.5px; }
+  ol.steps li strong{ color:var(--navy-deep); }
+
+  code.inline{
+    font-family:var(--mono); font-size:13px; background:var(--bg);
+    border:1px solid var(--line); border-radius:5px; padding:2px 7px; color:var(--navy-deep);
+  }
+
+  .command-box{
+    background:var(--navy-deep); color:#EDEFF2; border-radius:8px;
+    padding:14px 18px; font-family:var(--mono); font-size:14px; margin:14px 0;
+  }
+  .command-box .prompt{ color:#6EE7B7; margin-right:8px; }
+
+  .tip{
+    background:#FBF7EC; border:1px solid #E9DBAE; border-radius:8px;
+    padding:14px 18px; font-size:13.5px; color:#6B5416; margin-top:14px;
+  }
+  .tip strong{ color:#9A5B14; }
+
+  .col2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .feature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  .feature{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+  }
+  .feature .ico{ font-size:20px; margin-bottom:8px; display:block; }
+  .feature h4{ font-size:14px; color:var(--navy-deep); margin-bottom:4px; }
+  .feature p{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin:0; }
+
+  .faq{ border-top:1px solid var(--line); padding-top:14px; margin-top:14px; }
+
+  .ask-list{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:6px 22px; }
+  .ask-row{ padding:12px 0; border-bottom:1px solid var(--line); }
+  .ask-row:last-child{ border-bottom:none; }
+  .ask-row .ask-label{ font-size:12px; color:var(--ink-soft); margin-bottom:4px; }
+  .ask-row .ask-cmd{ font-family:var(--mono); font-size:13.5px; color:var(--navy-deep); background:var(--bg); border:1px solid var(--line); border-radius:5px; padding:6px 10px; display:inline-block; }
+
+  .cta-box{
+    background:var(--navy-deep); border-radius:10px; padding:24px 26px; margin-top:16px;
+  }
+  .cta-box h4{ font-family:var(--serif); font-size:18px; color:#fff; margin-bottom:8px; }
+  .cta-box p{ font-size:13.5px; color:#B9C2CE; margin-bottom:16px; line-height:1.6; }
+  .cta-button{
+    display:inline-block; background:var(--dash); color:#fff; font-weight:700; font-size:13.5px;
+    padding:10px 20px; border-radius:7px; text-decoration:none;
+  }
+  .cta-button:hover{ background:#164d8a; }
+  .faq-q{ font-weight:700; font-size:14px; color:var(--navy-deep); margin-bottom:4px; }
+  .faq-a{ font-size:13.5px; color:var(--ink-soft); }
+
+  .footer-note{
+    margin-top:60px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--ink-soft); text-align:center;
+  }
+
+  @media (max-width: 860px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:relative; }
+    .col2, .feature-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <span class="eyebrow">CS Operations · Field Guide</span>
+      <h1>CS Weekly Briefing</h1>
+      <div class="tag">Setup &amp; usage guide for the CS Intelligence Briefing — powered by Staircase AI + Gainsight CS</div>
+    </div>
+
+    <ul class="navlist">
+      <li><a href="#overview"><span class="navnum">01</span>What This Is</a></li>
+      <li><a href="#before"><span class="navnum">02</span>Before You Start</a></li>
+      <li><a href="#setup"><span class="navnum">03</span>Setup Steps</a></li>
+      <li><a href="#running"><span class="navnum">04</span>Running Your Briefing</a></li>
+      <li><a href="#sections"><span class="navnum">05</span>What's In It</a></li>
+      <li><a href="#asking"><span class="navnum">06</span>Asking for More</a></li>
+      <li><a href="#faq"><span class="navnum">07</span>FAQ</a></li>
+      <li><a href="#help"><span class="navnum">08</span>Need Help?</a></li>
+    </ul>
+
+    <div class="sidebar-foot">
+      Questions? Contact your CS Operations / admin team.<br>
+      Built with Claude + Staircase AI + Gainsight CS
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <h2>Getting Started with CS Weekly Briefing</h2>
+      <div class="sub">Your personal weekly account intelligence — no dashboards to check, no manual cross-referencing.</div>
+    </div>
+
+    <div class="intro-box">
+      <strong>What it does in one sentence:</strong> CS Weekly Briefing compares your Gainsight health scores against your Staircase relationship signals every Monday, flags where they disagree, and drafts the outreach emails for you — so you see the risk before it becomes a surprise.
+    </div>
+
+    <section id="overview">
+      <div class="section-label"><span class="navnum">01</span>WHAT THIS IS</div>
+      <h3 class="step-title">Signal intelligence, scoped to you</h3>
+      <p style="font-size:14.5px; color:var(--ink-soft); margin-bottom:16px;">
+        Gainsight tells you how healthy an account looks. Staircase tells you what the customer is actually saying. Most weeks, those two stories agree. CS Weekly Briefing exists for the weeks they don't.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <span class="ico">⚡</span>
+          <h4>Signal Conflicts</h4>
+          <p>Accounts where Gainsight shows healthy but Staircase shows risk — surfaced automatically, every Monday.</p>
+        </div>
+        <div class="feature">
+          <span class="ico">📧</span>
+          <h4>Draft Outreach</h4>
+          <p>Pre-written emails for at-risk accounts, written in your voice from a sample you provide.</p>
+        </div>
+        <div class="feature">
+          <span class="ico">🌑</span>
+          <h4>Gone Dark Alerts</h4>
+          <p>Accounts with no engagement in 60+ days and a renewal coming up — before it's too late to act.</p>
+        </div>
+        <div class="feature">
+          <span class="ico">🌱</span>
+          <h4>Expansion Signals</h4>
+          <p>Your top opportunities by ARR, so retention and growth conversations don't compete for attention.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="before">
+      <div class="section-label"><span class="navnum">02</span>BEFORE YOU START</div>
+      <h3 class="step-title">Connect three things in Cowork</h3>
+      <div class="card">
+        <span class="badge badge-health">Required</span>
+        <ol class="steps">
+          <li>Open Cowork → <strong>Settings → Connectors</strong></li>
+          <li>Confirm these three are connected:
+            <div style="margin-top:8px;">
+              <span class="badge badge-dash">Gainsight (Staircase AI)</span>
+              <span class="badge badge-dash">Gainsight CS</span>
+              <span class="badge badge-dash">Slack</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="tip"><strong>Heads up —</strong> connectors sometimes take a moment to finish authorizing after you first connect them. If a briefing says a connector isn't authorized, wait about 30 seconds and try again before assuming something's wrong.</div>
+    </section>
+
+    <section id="setup">
+      <div class="section-label"><span class="navnum">03</span>SETUP STEPS</div>
+      <h3 class="step-title">Install the plugin, then talk to it</h3>
+
+      <div class="card">
+        <span class="badge badge-expansion">Step 1 — Install</span>
+        <p style="font-size:14px; margin-top:6px;">Open Cowork, go to the plugin directory, and add the <code class="inline">cs-weekly-briefing</code> plugin using the file or repository your admin team shared with you.</p>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-expansion">Step 2 — Start setup</span>
+        <p style="font-size:14px; margin-top:6px;">Open a new Cowork chat with the plugin active and type:</p>
+        <div class="command-box"><span class="prompt">&gt;</span>set up my briefing</div>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-expansion">Step 3 — Answer a few questions</span>
+        <ol class="steps">
+          <li><strong>Your name</strong> — Claude finds you in Staircase and Gainsight automatically</li>
+          <li><strong>Your manager</strong> — just type their name; email is constructed automatically</li>
+          <li><strong>Delivery timing</strong> — what day and time you'd like it (e.g. "Monday at 8am")</li>
+          <li><strong>Briefing depth</strong> — Full (all sections) or Essentials (30-day focus, shorter)</li>
+          <li><strong>Customer emails</strong> — whether you want draft outreach, which accounts, and what style</li>
+          <li><strong>Writing sample</strong> — paste an example email so Claude matches your voice</li>
+          <li><strong>Your signature</strong> — how you sign off (e.g. "Best, Jane Smith | Customer Success")</li>
+        </ol>
+      </div>
+      <div class="tip"><strong>Tip —</strong> anonymize any customer names or confidential details in your writing sample before pasting. The content doesn't matter — only your tone and style do.</div>
+    </section>
+
+    <section id="running">
+      <div class="section-label"><span class="navnum">04</span>RUNNING YOUR BRIEFING</div>
+      <h3 class="step-title">Automatic, on-demand, or preview</h3>
+      <div class="col2">
+        <div class="card">
+          <span class="badge badge-handoff">Automatic</span>
+          <p style="font-size:13.5px; margin-top:8px;">Runs on the schedule you set during setup. No action needed.</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-handoff">On demand</span>
+          <div class="command-box" style="margin:8px 0 0;"><span class="prompt">&gt;</span>run my briefing</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <span class="badge badge-handoff">Preview (no delivery)</span>
+        <div class="command-box" style="margin:8px 0 0;"><span class="prompt">&gt;</span>preview my briefing</div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:8px;">Generates the briefing in Cowork chat only — nothing sent to Slack, nothing written to history. Good for a first look.</p>
+      </div>
+    </section>
+
+    <section id="sections">
+      <div class="section-label"><span class="navnum">05</span>WHAT'S IN IT</div>
+      <h3 class="step-title">Every Monday, in this order</h3>
+      <div class="card">
+        <p style="font-size:14px; margin-bottom:10px;"><strong>⚡ TL;DR</strong> — top risk, top opportunity, one action for the week, readable in ten seconds.</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>📊 What's Happening in My Book</strong> — patterns across your accounts, not an inventory.</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>⚡ New Signal Conflicts</strong> — Gainsight and Staircase disagreements, detected for the first time this week.</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>🔴 New Risks</strong> — accounts where something materially changed this week.</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>⚠️ Still Watching</strong> — ongoing risks tracked week over week (from Week 2 onward).</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>🌑 Gone Dark</strong> — no engagement, renewal approaching.</p>
+        <p style="font-size:14px; margin-bottom:10px;"><strong>🌱 Expansion Signals</strong> — your top opportunities by ARR.</p>
+        <p style="font-size:14px; margin:0;"><strong>📧 Draft Customer Outreach</strong> — click a name, review, personalize, send.</p>
+      </div>
+    </section>
+
+    <section id="asking">
+      <div class="section-label"><span class="navnum">06</span>ASKING FOR MORE</div>
+      <h3 class="step-title">The briefing only shows you the highlights — you can ask for more anytime</h3>
+      <p style="font-size:14px; color:var(--ink-soft); margin-bottom:16px;">
+        Your briefing surfaces what needs attention this week, not a full inventory of your book. Gone Dark and Gainsight cross-referencing may not cover every single account depending on volume — this is disclosed directly in the briefing whenever it happens. None of this is a hard limit on what you can see. To get more, open Cowork (not Slack) and type your request directly, in plain English. A few examples:
+      </p>
+
+      <div class="ask-list">
+        <div class="ask-row">
+          <div class="ask-label">See your full account list, not just what's flagged</div>
+          <span class="ask-cmd">show me my full account list</span>
+        </div>
+        <div class="ask-row">
+          <div class="ask-label">Get Gainsight cross-reference on gone-dark accounts too</div>
+          <span class="ask-cmd">cross-reference my gone-dark accounts against Gainsight</span>
+        </div>
+        <div class="ask-row">
+          <div class="ask-label">See more expansion opportunities</div>
+          <span class="ask-cmd">show me all my expansion-ready accounts</span>
+        </div>
+        <div class="ask-row">
+          <div class="ask-label">Run it again right now</div>
+          <span class="ask-cmd">run my briefing</span>
+        </div>
+      </div>
+
+      <div class="tip"><strong>A note on scope —</strong> these requests just pull more of the same data the briefing already has — they don't change how the briefing works. If you want something more fundamental changed (a different threshold, a different section, anything structural), that's not a "type it and go" request — see Section 08 below for how to ask CS Operations directly.</div>
+    </section>
+
+    <section id="faq">
+      <div class="section-label"><span class="navnum">07</span>FAQ</div>
+      <h3 class="step-title">Common questions</h3>
+
+      <div class="faq">
+        <div class="faq-q">Will this send emails on my behalf?</div>
+        <div class="faq-a">No. Every customer email opens as a draft with the recipient field blank — you choose who to send it to, review the content, and hit send yourself.</div>
+      </div>
+      <div class="faq">
+        <div class="faq-q">What if a connector says it's not authorized?</div>
+        <div class="faq-a">This is usually a timing issue — the connector just finished authorizing and the session hasn't caught up. Wait a moment and try again.</div>
+      </div>
+      <div class="faq">
+        <div class="faq-q">Does this replace Health Score / Scorecard?</div>
+        <div class="faq-a">No — it complements it. Gainsight health measures what customers do. Staircase measures what they say. CS Weekly Briefing tells you when those two signals disagree.</div>
+      </div>
+      <div class="faq">
+        <div class="faq-q">Can I change my delivery day or style later?</div>
+        <div class="faq-a">Yes — just say "set up my briefing" again and walk through setup; your new answers overwrite the old configuration.</div>
+      </div>
+    </section>
+
+    <section id="help">
+      <div class="section-label"><span class="navnum">08</span>NEED HELP?</div>
+      <h3 class="step-title">Something structural to change, or something not working right?</h3>
+      <p style="font-size:14px; color:var(--ink-soft); margin-bottom:8px;">
+        If you want a genuine change to how the briefing works — a different threshold, a new section, something that isn't covered by "Asking for More" above — or if something looks broken, don't try to edit the plugin yourself. Reach out to whoever administers this plugin for your organization instead.
+      </p>
+
+      <div class="cta-box">
+        <h4>Submit a request to your admin team</h4>
+        <p>Your organization may have its own request process — a ticketing system, a Slack channel, or a simple email. <strong>Admins:</strong> replace this box with your own team's request link before distributing this guide.</p>
+        <a class="cta-button" href="#" target="_blank">[ Insert your request link here → ]</a>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      CS Weekly Briefing · Built with Claude + Staircase AI + Gainsight CS
+    </div>
+
+  </main>
+</div>
+</body>
+</html>
